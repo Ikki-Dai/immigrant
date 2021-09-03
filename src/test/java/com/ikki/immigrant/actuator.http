@@ -1,0 +1,6 @@
+#@no-log
+GET localhost:12315/actuator/health
+
+###
+#@no-log
+GET localhost:12315/actuator/beans
