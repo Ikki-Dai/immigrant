@@ -1,6 +1,9 @@
 package com.ikki.immigrant.domain.subject;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -42,13 +45,11 @@ public class SubjectRepoTest {
 //        Assertions.assertNotNull(result.get());
     }
 
-    @Test
     public void queryTest() {
         Optional<Subject> result = subjectRepository.findByPhone("131-1234-1235");
         Assertions.assertNotNull(result.get());
     }
 
-    @Test
     public void queryTest2() {
         Iterable<Subject> credentials = subjectRepository.findAll();
         credentials.forEach(System.out::println);

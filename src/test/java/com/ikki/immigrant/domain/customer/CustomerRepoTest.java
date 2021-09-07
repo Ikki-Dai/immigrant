@@ -1,6 +1,5 @@
 package com.ikki.immigrant.domain.customer;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,7 +11,6 @@ public class CustomerRepoTest {
     @Autowired
     CustomerRepository customerRepository;
 
-    @Test
     public void save() {
         Customer customer = new Customer();
 

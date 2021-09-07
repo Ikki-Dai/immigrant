@@ -2,7 +2,7 @@
 /*   DatabaseName = immigrant   */
 /*   TableName = subject   */
 /******************************************/
-CREATE TABLE `subject`
+CREATE TABLE IF NOT EXISTS `subject`
 (
     `id`          bigint       NOT NULL AUTO_INCREMENT COMMENT '自增长',
     `uid`         bigint       NOT NULL DEFAULT 0 COMMENT '账号唯一ID',
@@ -22,7 +22,7 @@ CREATE TABLE `subject`
     COMMENT ='账号主体'
 ;
 
-CREATE TABLE `credentials`
+CREATE TABLE IF NOT EXISTS `credentials`
 (
     `id`          bigint       NOT NULL AUTO_INCREMENT COMMENT '自增长',
     `uid`         bigint       NOT NULL DEFAULT 0 COMMENT '账号唯一ID',
