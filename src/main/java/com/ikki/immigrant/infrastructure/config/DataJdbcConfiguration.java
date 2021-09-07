@@ -26,7 +26,9 @@ public class DataJdbcConfiguration extends AbstractJdbcConfiguration {
                 CustomConverter.BitSet2StrConvert.INSTANCE,
                 CustomConverter.Str2BitSetConvert.INSTANCE,
                 CustomConverter.Enum2Integer.INSTANCE,
-                new CustomConverter.Integer2Enum(Subject.Status.class)
+                new CustomConverter.Integer2Enum(Subject.UsableStatus.class),
+                CustomConverter.Es2StrConverter.INSTANCE,
+                new CustomConverter.Str2EsConverter<>(Subject.ValidStatus.class)
         ));
     }
 

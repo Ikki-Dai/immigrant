@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -26,9 +27,11 @@ public class SubjectRepoTest {
     public void saveTest() {
 //        subjectCredentialsRepository.deleteAll();
         Subject subject = new Subject();
+        subject.setUsername("tomcat");
         subject.setEmail("tomcat@apache.com");
         subject.setPhone("131-1234-1235");
-        subject.setStatus(Subject.Status.UNKNOWN);
+        subject.setValid(EnumSet.of(Subject.ValidStatus.EMAIL_VERIFIED));
+        subject.setAvailable(Subject.UsableStatus.NORMAL);
         Subject credentials = subjectRepository.save(subject);
 //        System.out.println(credentials.getId());
 //        Assertions.assertNotNull(credentials);
