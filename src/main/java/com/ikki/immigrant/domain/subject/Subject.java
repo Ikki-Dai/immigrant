@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
+import java.util.EnumSet;
 
 @Getter
 @Setter
@@ -18,20 +19,26 @@ public class Subject {
     private long id;
     @Id
     private long uid;
+    private String username;
     private String phone;
     private String email;
-    private Status status;
+    private EnumSet<ValidStatus> valid;
+    private UsableStatus available;
     @CreatedDate
     private Instant signupTime;
     @LastModifiedDate
     private Instant updateTime;
 
-    public enum Status {
+    public enum ValidStatus {
+        UN_VERIFIED,  // only password
+        EMAIL_VERIFIED, // can login by email code
+        PHONE_VERIFIED, // can login by phone code
+        TOTP_VERIFIED, // totp verification enabled
+        FIDO_VERIFIED,
+    }
+
+    public enum UsableStatus {
         UNKNOWN,
-        UN_VERIFIED,
-        EMAIL_VERIFIED,
-        PHONE_VERIFIED,
-        BOTH_VERIFIED,
         NORMAL,
         FREEZE,
         BANNED
