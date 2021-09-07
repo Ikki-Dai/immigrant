@@ -94,14 +94,12 @@ public class JwtUtilsTest {
         System.out.println(token);
     }
 
-    @Test
     public void verifyToken() throws ParseException, JOSEException {
         jwsVerifier = new MACVerifier(SECRET);
         SignedJWT jwt = SignedJWT.parse(token);
         Assertions.assertTrue(jwt.verify(jwsVerifier));
     }
 
-    @Test
     public void verifyProcessor() throws ParseException, BadJOSEException, JOSEException {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJpc3MiOiJkZXZlbG9wZXIiLCJhdWQiOiJkZXZlbG9wZXIiLCJzdWIiOiJqdW5pdCIsImV4cCI6MTYyODQxMDMzNSwiaWF0IjoxNjI4NDA2NzM1fQ.nhRtb11SG9_4mtXC-jEqQ6_mf7_6wy64WWoOUa1sBQpKW4b-RTYRPgNyK06OyU8_lG5YiVlj2XOZvzzGeBPrAg";
 
