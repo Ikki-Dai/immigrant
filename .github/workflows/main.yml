@@ -35,4 +35,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SONAR_ACCESS }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: 
-          mvn -B verify org.jacoco:jacoco-maven-plugin:0.8.7:prepare-agent install -Dmaven.test.failure.ignore=true org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ikki-Dai_immigrant -Dsonar.login=${SONAR_TOKEN}
+          mvn -B verify org.jacoco:jacoco-maven-plugin:0.8.7:prepare-agent -Dmaven.test.failure.ignore=true org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ikki-Dai_immigrant -Dsonar.login=${SONAR_TOKEN}
