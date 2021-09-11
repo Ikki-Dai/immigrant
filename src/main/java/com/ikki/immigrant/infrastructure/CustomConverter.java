@@ -1,4 +1,4 @@
-package com.ikki.immigrant.infrastructure.convert;
+package com.ikki.immigrant.infrastructure;
 
 import io.undertow.util.HexConverter;
 import lombok.NonNull;
@@ -14,6 +14,8 @@ import java.util.EnumSet;
 
 @Slf4j
 public class CustomConverter {
+
+    private static final String empty = "";
 
     @WritingConverter
     public enum BitSet2StrConvert implements Converter<BitSet, String> {
@@ -85,7 +87,7 @@ public class CustomConverter {
         @Override
         public E convert(@NonNull Integer number) {
             try {
-                return enums[number.intValue()];
+                return enums[number];
             } catch (Exception ex) {
                 log.warn("Cannot convert {} to {} by ordinal value.", number, type.getSimpleName());
             }
