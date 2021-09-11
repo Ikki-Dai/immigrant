@@ -8,6 +8,7 @@ import com.nimbusds.jose.jwk.gen.OctetKeyPairGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -132,7 +133,7 @@ public class JwtUtilsTest {
         ImmutableJWKSet<SecurityContext> keySet = new ImmutableJWKSet<>(new JWKSet(octetKeyPair));
 
         JWSKeySelector<SecurityContext> keySelector =
-                new EdDSAJWSKeySelector<>(keySet);
+                new JWSVerificationKeySelector<>(JWSAlgorithm.EdDSA, keySet);
 
         jwtProcessor.setJWSKeySelector(keySelector);
 
