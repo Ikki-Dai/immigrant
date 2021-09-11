@@ -54,6 +54,27 @@ class ConverterTest {
         Assertions.assertTrue(enumSet.contains(TestEnum.V1));
     }
 
+    @Test
+    public void exceptionTest() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new CustomConverter.Str2EsConverter<>(null);
+        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new CustomConverter.Str2EsConverter<>(fakeEnum.class);
+        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new CustomConverter.Number2EnumConverter<>(null);
+        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new CustomConverter.Number2EnumConverter<>(fakeEnum.class);
+        });
+    }
+
+    enum fakeEnum {
+
+    }
+
+
     enum TestEnum {
         V0, V1, V2
     }

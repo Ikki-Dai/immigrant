@@ -1,7 +1,6 @@
 package com.ikki.immigrant.infrastructure;
 
 import io.undertow.util.HexConverter;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
@@ -14,8 +13,6 @@ import java.util.EnumSet;
 
 @Slf4j
 public class CustomConverter {
-
-    private static final String empty = "";
 
     @WritingConverter
     public enum BitSet2StrConvert implements Converter<BitSet, String> {
@@ -33,7 +30,7 @@ public class CustomConverter {
         INSTANCE;
 
         @Override
-        public BitSet convert(@NonNull String source) {
+        public BitSet convert(String source) {
             byte[] bytes = HexConverter.convertFromHex(source);
             return BitSet.valueOf(bytes);
         }
@@ -79,13 +76,13 @@ public class CustomConverter {
             }
             this.type = type;
             this.enums = type.getEnumConstants();
-            if (this.enums == null) {
+            if (enums.length == 0) {
                 throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
             }
         }
 
         @Override
-        public E convert(@NonNull Integer number) {
+        public E convert(Integer number) {
             try {
                 return enums[number];
             } catch (Exception ex) {
@@ -106,7 +103,7 @@ public class CustomConverter {
             }
             this.type = type;
             this.enums = type.getEnumConstants();
-            if (this.enums == null) {
+            if (enums.length == 0) {
                 throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
             }
         }
