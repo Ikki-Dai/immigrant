@@ -9,7 +9,7 @@ public class CredentialsTest {
     String password = "123456";
 
     @Test
-    public void scryptTest() {
+    void scryptTest() {
 //        long start = System.currentTimeMillis();
         String hash = SCryptUtil.scrypt(password, 16, 80, 28);
 //        System.out.println(System.currentTimeMillis() - start);
@@ -17,7 +17,7 @@ public class CredentialsTest {
     }
 
     @Test
-    public void verifyTest() {
+    void verifyTest() {
         Assertions.assertTrue(SCryptUtil.check("123456", "$s0$33208$twECMl2cp1I/zdTRqT2gCg==$Ub2tKqLX0j/Iqutlb9D+XRIDVJy/OLYV0oKwM75r6So="));
     }
 

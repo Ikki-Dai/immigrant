@@ -7,14 +7,15 @@ import org.junit.jupiter.api.Test;
 public class HexConvertTest {
 
     @Test
-    public void toStr() {
+    void toStr() {
         byte[] bytes = new byte[]{15, 17};
         String str = HexConverter.convertToHexString(bytes);
         System.out.println(str);
+        Assertions.assertNotNull(str);
     }
 
     @Test
-    public void toByte() {
+    void toByte() {
         byte[] bytes = HexConverter.convertFromHex("0f11");
         for (byte b : bytes) {
             System.out.println(b);

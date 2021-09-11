@@ -35,3 +35,11 @@ CREATE TABLE IF NOT EXISTS `credentials`
 ) ENGINE = InnoDB
     COMMENT ='账号凭证'
 ;
+
+CREATE TABLE IF NOT EXISTS `customer`
+(
+    `id`            int         NOT NULL AUTO_INCREMENT,
+    `customer_name` varchar(64) NOT NULL DEFAULT ''
+) ENGINE = InnoDB
+    COMMENT ='账号凭证'
+;

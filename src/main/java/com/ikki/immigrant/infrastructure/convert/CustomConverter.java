@@ -38,8 +38,7 @@ public class CustomConverter {
     }
 
     @WritingConverter
-    public enum Enum2IntegerConverter implements Converter<Enum, JdbcValue> {
-        INSTANCE;
+    public static class Enum2IntegerConverter<E extends Enum<E>> implements Converter<Enum<E>, JdbcValue> {
 
         @Override
         public JdbcValue convert(Enum anEnum) {
@@ -48,8 +47,7 @@ public class CustomConverter {
     }
 
     @WritingConverter
-    public enum Es2StrConverter implements Converter<EnumSet, JdbcValue> {
-        INSTANCE;
+    public static class Es2StrConverter<E extends Enum<E>> implements Converter<EnumSet<E>, JdbcValue> {
 
         @Override
         public JdbcValue convert(EnumSet enumSet) {

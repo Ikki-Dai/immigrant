@@ -35,7 +35,7 @@ public class SubjectRepoTest {
         Assertions.assertNotNull(sbj);
     }
 
-    public void saveTest() {
+    void saveTest() {
         Subject subject = new Subject();
         subject.setUsername("apisix");
         subject.setEmail("apisix@apache.com");
@@ -50,19 +50,19 @@ public class SubjectRepoTest {
     }
 
     @Test
-    public void findByPhoneTest() {
+    void findByPhoneTest() {
         Optional<Subject> result = subjectRepository.findByPhone("131-1234-1235");
         Assertions.assertNotNull(result.get());
     }
 
     @Test
-    public void findByEmailTest() {
+    void findByEmailTest() {
         Optional<Subject> result = subjectRepository.findByEmail("tomcat@apache.com");
         Assertions.assertNotNull(result.get());
     }
 
     @Test
-    public void findAllTest() {
+    void findAllTest() {
         Iterable<Subject> subjects = subjectRepository.findAll();
         subjects.forEach(System.out::println);
         System.out.println(IterableUtils.size(subjects));

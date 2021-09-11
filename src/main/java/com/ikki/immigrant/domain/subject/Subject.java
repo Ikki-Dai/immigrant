@@ -16,7 +16,6 @@ import java.util.EnumSet;
 @Table
 @ToString
 public class Subject {
-    //    private long id;
     @Id
     private long uid;
     private String username;

@@ -62,7 +62,7 @@ public class JwtUtilsTest {
     }
 
     @Test
-    public void testEC() throws JOSEException, ParseException {
+    void testEC() throws JOSEException, ParseException {
         jwsSigner = new ECDSASigner(ecKey);
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.ES256), jwtClaimsSet);
@@ -76,7 +76,7 @@ public class JwtUtilsTest {
     }
 
     @Test
-    public void ed25519Test() throws JOSEException, ParseException {
+    void ed25519Test() throws JOSEException, ParseException {
         jwsSigner = new Ed25519Signer(octetKeyPair);
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.EdDSA), jwtClaimsSet);
@@ -92,14 +92,14 @@ public class JwtUtilsTest {
 
 
     @Test
-    public void test() {
+    void test() {
         Set<Curve> sets = OctetKeyPairGenerator.SUPPORTED_CURVES;
         sets.forEach(System.out::println);
         Assertions.assertNotNull(sets);
     }
 
     @Test
-    public void buildJwt() throws JOSEException {
+    void buildJwt() throws JOSEException {
         jwsSigner = new MACSigner(SECRET);
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), jwtClaimsSet);
@@ -117,7 +117,7 @@ public class JwtUtilsTest {
      * @throws JOSEException
      * @see com.nimbusds.jose.proc.JWSKeySelector
      */
-    public void verifyProcessor() throws ParseException, BadJOSEException, JOSEException {
+    void verifyProcessor() throws ParseException, BadJOSEException, JOSEException {
         OctetKeyPair octetKeyPair = OctetKeyPair.parse(jwkStr);
 
         // generate token wait to verify
@@ -160,7 +160,7 @@ public class JwtUtilsTest {
 
 
     @Test
-    public void parse() throws ParseException, JOSEException {
+    void parse() throws ParseException, JOSEException {
         OctetKeyPair octetKeyPair = OctetKeyPair.parse(jwkStr);
         Base64URL base64URL = octetKeyPair.computeThumbprint();
 

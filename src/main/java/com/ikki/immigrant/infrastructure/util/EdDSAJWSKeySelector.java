@@ -19,6 +19,8 @@ import java.util.List;
 /**
  * @param <C>
  * @see com.nimbusds.jose.proc.JWSKeySelector which does not support OctKeyPair
+ * @see com.nimbusds.jose.jwk.OctetKeyPair
+ * @deprecated
  */
 @Deprecated
 public class EdDSAJWSKeySelector<C extends SecurityContext> implements JWSKeySelector<C> {
@@ -47,7 +49,6 @@ public class EdDSAJWSKeySelector<C extends SecurityContext> implements JWSKeySel
         List<Key> sanitizedKeyList = new LinkedList<>();
         for (JWK jwk : jwkMatches) {
             if (jwk instanceof AsymmetricJWK) {
-//                sanitizedKeyList.add(key);
             }
         }
         return sanitizedKeyList;
