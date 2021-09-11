@@ -42,4 +42,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SONAR_ACCESS }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run:
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ikki-Dai_immigrant -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=ikki-dai -Dsonar.coverage.jacoco.xmlReportPaths=${project.build.directory}/site/jacoco/jacoco.xml
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ikki-Dai_immigrant -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=ikki-dai -Dsonar.coverage.jacoco.xmlReportPaths=\${project.build.directory}/site/jacoco/jacoco.xml
