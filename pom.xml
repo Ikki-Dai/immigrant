@@ -59,13 +59,13 @@
         <dependency>
             <groupId>com.google.crypto.tink</groupId>
             <artifactId>tink</artifactId>
-            <version>[1.6.0,)</version>
+            <version>1.6.1</version>
         </dependency>
         <!--获取env from uap-->
         <dependency>
             <groupId>com.github.ua-parser</groupId>
             <artifactId>uap-java</artifactId>
-            <version>[1.5.0,)</version>
+            <version>1.5.2</version>
         </dependency>
 
         <dependency>
@@ -99,7 +99,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
