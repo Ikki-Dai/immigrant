@@ -1,9 +1,10 @@
 package com.ikki.immigrant.domain.subject;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,36 +24,49 @@ public class SubjectRepoTest {
 
     @BeforeEach
     public void clear() {
-//        subjectCredentialsRepository.deleteAll();
-    }
-
-    @RepeatedTest(1)
-    public void saveTest() {
-//        subjectCredentialsRepository.deleteAll();
+        subjectRepository.deleteAll();
         Subject subject = new Subject();
         subject.setUsername("tomcat");
         subject.setEmail("tomcat@apache.com");
         subject.setPhone("131-1234-1235");
-        subject.setValid(EnumSet.of(Subject.ValidStatus.EMAIL_VERIFIED));
-        subject.setAvailable(Subject.UsableStatus.NORMAL);
-        Subject credentials = subjectRepository.save(subject);
-//        System.out.println(credentials.getId());
-//        Assertions.assertNotNull(credentials);
-
-        Optional<Subject> result = subjectRepository.findById(640318559725027328L);
-        result.ifPresent(System.out::println);
-//        Optional<SubjectCredentials> result = subjectCredentialsRepository.findByPhone("131-xxxx-xxxx");
-//        Assertions.assertNotNull(result.get());
+        subject.setValid(EnumSet.of(Subject.ValidStatus.PHONE_VERIFIED, Subject.ValidStatus.EMAIL_VERIFIED));
+        subject.setAvailable(Subject.AvailableStatus.FREEZE);
+        Subject sbj = subjectRepository.save(subject);
+        Assertions.assertNotNull(sbj);
     }
 
-    public void queryTest() {
+    public void saveTest() {
+        Subject subject = new Subject();
+        subject.setUsername("apisix");
+        subject.setEmail("apisix@apache.com");
+        subject.setPhone("131-1234-1237");
+        subject.setValid(EnumSet.of(Subject.ValidStatus.PHONE_VERIFIED, Subject.ValidStatus.EMAIL_VERIFIED));
+        subject.setAvailable(Subject.AvailableStatus.NORMAL);
+        Subject sbj = subjectRepository.save(subject);
+        Optional<Subject> result = subjectRepository.findByEmail("apisix@apache.com");
+        System.out.println(result.get());
+        Assertions.assertTrue(result.isPresent());
+//        Assertions.assertTrue(sbj.getUid() > 0);
+    }
+
+    @Test
+    public void findByPhoneTest() {
         Optional<Subject> result = subjectRepository.findByPhone("131-1234-1235");
         Assertions.assertNotNull(result.get());
     }
 
-    public void queryTest2() {
-        Iterable<Subject> credentials = subjectRepository.findAll();
-        credentials.forEach(System.out::println);
+    @Test
+    public void findByEmailTest() {
+        Optional<Subject> result = subjectRepository.findByEmail("tomcat@apache.com");
+        Assertions.assertNotNull(result.get());
+    }
+
+    @Test
+    public void findAllTest() {
+        Iterable<Subject> subjects = subjectRepository.findAll();
+        subjects.forEach(System.out::println);
+        System.out.println(IterableUtils.size(subjects));
+        Assertions.assertTrue(IterableUtils.size(subjects) > 0);
     }
 
 

@@ -13,7 +13,6 @@ public class CustomerRepoTest {
 
     public void save() {
         Customer customer = new Customer();
-
         BitSet bitSet = new BitSet();
         bitSet.set(8);
         customer.setCustomerName(bitSet);

@@ -1,6 +1,7 @@
 package com.ikki.immigrant.infrastructure.convert;
 
 import io.undertow.util.HexConverter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
@@ -30,14 +31,14 @@ public class CustomConverter {
         INSTANCE;
 
         @Override
-        public BitSet convert(String source) {
+        public BitSet convert(@NonNull String source) {
             byte[] bytes = HexConverter.convertFromHex(source);
             return BitSet.valueOf(bytes);
         }
     }
 
     @WritingConverter
-    public enum Enum2Integer implements Converter<Enum, JdbcValue> {
+    public enum Enum2IntegerConverter implements Converter<Enum, JdbcValue> {
         INSTANCE;
 
         @Override
@@ -67,12 +68,12 @@ public class CustomConverter {
     }
 
     @ReadingConverter
-    public static class Integer2Enum<E extends Enum> implements Converter<Integer, E> {
+    public static class Number2EnumConverter<E extends Enum<E>> implements Converter<Integer, E> {
 
         private final Class<E> type;
         private final E[] enums;
 
-        public Integer2Enum(Class<E> type) {
+        public Number2EnumConverter(Class<E> type) {
             if (type == null) {
                 throw new IllegalArgumentException("Type argument cannot be null");
             }
@@ -84,18 +85,18 @@ public class CustomConverter {
         }
 
         @Override
-        public E convert(Integer ordinal) {
-//            try {
-//                return enums[ordinal];
-//            } catch (Exception ex) {
-//                log.warn("Cannot convert {} to {} by ordinal value.", ordinal, type.getSimpleName());
-//            }
+        public E convert(@NonNull Integer number) {
+            try {
+                return enums[number.intValue()];
+            } catch (Exception ex) {
+                log.warn("Cannot convert {} to {} by ordinal value.", number, type.getSimpleName());
+            }
             return null;
         }
     }
 
     @ReadingConverter
-    public static class Str2EsConverter<E extends Enum> implements Converter<String, EnumSet> {
+    public static class Str2EsConverter<E extends Enum<E>> implements Converter<String, EnumSet<E>> {
         private final Class<E> type;
         private final E[] enums;
 
@@ -111,11 +112,11 @@ public class CustomConverter {
         }
 
         @Override
-        public EnumSet convert(String s) {
+        public EnumSet<E> convert(String s) {
             String[] sa = s.split(",");
-            EnumSet enumSet = EnumSet.noneOf(type);
+            EnumSet<E> enumSet = EnumSet.noneOf(type);
             for (String e : sa) {
-                enumSet.add(enums[Integer.valueOf(e)]);
+                enumSet.add(enums[Integer.parseInt(e)]);
             }
             return enumSet;
         }

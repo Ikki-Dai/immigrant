@@ -16,14 +16,14 @@ import java.util.EnumSet;
 @Table
 @ToString
 public class Subject {
-    private long id;
+    //    private long id;
     @Id
     private long uid;
     private String username;
     private String phone;
     private String email;
     private EnumSet<ValidStatus> valid;
-    private UsableStatus available;
+    private AvailableStatus available;
     @CreatedDate
     private Instant signupTime;
     @LastModifiedDate
@@ -34,10 +34,10 @@ public class Subject {
         EMAIL_VERIFIED, // can login by email code
         PHONE_VERIFIED, // can login by phone code
         TOTP_VERIFIED, // totp verification enabled
-        FIDO_VERIFIED,
+        FIDO_VERIFIED
     }
 
-    public enum UsableStatus {
+    public enum AvailableStatus {
         UNKNOWN,
         NORMAL,
         FREEZE,

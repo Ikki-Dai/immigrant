@@ -23,10 +23,11 @@ public class DataJdbcConfiguration extends AbstractJdbcConfiguration {
     @Override
     public JdbcCustomConversions jdbcCustomConversions() {
         return new JdbcCustomConversions(Arrays.asList(
-                CustomConverter.BitSet2StrConvert.INSTANCE,
-                CustomConverter.Str2BitSetConvert.INSTANCE,
-                CustomConverter.Enum2Integer.INSTANCE,
-                new CustomConverter.Integer2Enum(Subject.UsableStatus.class),
+//                CustomConverter.BitSet2StrConvert.INSTANCE,
+//                CustomConverter.Str2BitSetConvert.INSTANCE,
+//                new BitSet2StrConvert(), new Str2BitSetConvert(),
+                CustomConverter.Enum2IntegerConverter.INSTANCE,
+                new CustomConverter.Number2EnumConverter<>(Subject.AvailableStatus.class),
                 CustomConverter.Es2StrConverter.INSTANCE,
                 new CustomConverter.Str2EsConverter<>(Subject.ValidStatus.class)
         ));
