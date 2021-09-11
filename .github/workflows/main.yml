@@ -31,15 +31,15 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Unit Test
-        env:
-          GITHUB_TOKEN: ${{ secrets.SONAR_ACCESS }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run:
-          mvn -B verify org.jacoco:jacoco-maven-plugin:0.8.7:prepare-agent -Dmaven.test.failure.ignore=true
+      #      - name: Unit Test
+      #        env:
+      #          GITHUB_TOKEN: ${{ secrets.SONAR_ACCESS }}  # Needed to get PR information, if any
+      #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #        run:
+      #          mvn -B verify org.jacoco:jacoco-maven-plugin:0.8.7:prepare-agent -Dmaven.test.failure.ignore=true
       - name: Analysis
         env:
           GITHUB_TOKEN: ${{ secrets.SONAR_ACCESS }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run:
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ikki-Dai_immigrant -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=ikki-dai
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ikki-Dai_immigrant -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=ikki-dai -Dsonar.coverage.jacoco.xmlReportPaths=${project.build.directory}/site/jacoco/jacoco.xml
