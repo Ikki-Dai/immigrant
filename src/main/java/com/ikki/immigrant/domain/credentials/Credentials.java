@@ -1,18 +1,20 @@
 package com.ikki.immigrant.domain.credentials;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Table
 @Getter
 @Setter
+@ToString
 public class Credentials {
 
     @Id
     private long id;
+
     private long uid;
     /**
      * the credential content

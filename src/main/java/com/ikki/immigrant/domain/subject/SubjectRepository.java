@@ -11,4 +11,6 @@ public interface SubjectRepository extends CrudRepository<Subject, Long> {
     Optional<Subject> findByPhone(String phone);
 
     Optional<Subject> findByEmail(String email);
+
+    Optional<Subject> findByUsername(String username);
 }
