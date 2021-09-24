@@ -1,7 +1,6 @@
 package com.ikki.immigrant.domain.credentials;
 
 import com.ikki.immigrant.infrastructure.config.DataJdbcConfiguration;
-import com.lambdaworks.crypto.SCryptUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ public class CredentialsRepoTest {
     void prepare() {
         Credentials credentials = new Credentials();
         credentials.setUid(12345L);
-        credentials.setCredential(SCryptUtil.scrypt("123456", 16, 80, 28));
+        credentials.setCredential("");
         credentials.setAlias("");
         credentials.setIdentifier("");
         credentials.setType(Credentials.Type.PASSWORD);
