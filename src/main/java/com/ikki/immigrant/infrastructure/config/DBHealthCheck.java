@@ -58,7 +58,7 @@ public class DBHealthCheck {
     )
     public HealthContributor fixDBHealthIndicator(Map<String, DataSource> dataSources, DataSourceHealthIndicatorProperties dataSourceHealthIndicatorProperties) {
         if (dataSourceHealthIndicatorProperties.isIgnoreRoutingDataSources()) {
-            Map<String, DataSource> filteredDataSources = dataSources.entrySet().stream().filter((e) -> !(e.getValue() instanceof AbstractRoutingDataSource)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            Map<String, DataSource> filteredDataSources = dataSources.entrySet().stream().filter(e -> !(e.getValue() instanceof AbstractRoutingDataSource)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             return this.createContributor(filteredDataSources);
         } else {
             return this.createContributor(dataSources);
@@ -98,7 +98,7 @@ public class DBHealthCheck {
         private final CompositeHealthContributor delegate;
 
         RoutingDataSourceHealthContributor(AbstractRoutingDataSource routingDataSource, Function<DataSource, HealthContributor> contributorFunction) {
-            Map<String, DataSource> routedDataSources = routingDataSource.getResolvedDataSources().entrySet().stream().collect(Collectors.toMap((e) -> e.getKey().toString(), Map.Entry::getValue));
+            Map<String, DataSource> routedDataSources = routingDataSource.getResolvedDataSources().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
             this.delegate = CompositeHealthContributor.fromMap(routedDataSources, contributorFunction);
         }
 

@@ -51,7 +51,6 @@ public class SensitiveSerializer extends StdSerializer<String> implements Contex
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
-//        SensitiveMask sensitiveMask = null;
         if (null != property) {
             sensitiveMask = property.getAnnotation(SensitiveMask.class);
         }

@@ -18,7 +18,7 @@ public class SubjectService {
     private static final String PHONE_IDENTIFIER = "+";
     private static final String EMPTY_STR = "";
 
-    private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+    private static final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
     private final SubjectRepository subjectRepository;
 
     public SubjectService(SubjectRepository subjectRepository) {

@@ -1,6 +1,7 @@
 package com.ikki.immigrant.domain.customer;
 
 import com.ikki.immigrant.infrastructure.config.DataJdbcConfiguration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -21,7 +22,8 @@ class CustomerRepoTest {
         BitSet bitSet = new BitSet();
         bitSet.set(8);
         customer.setCustomerName(bitSet);
-        customerRepository.save(customer);
+        Customer custom = customerRepository.save(customer);
+        Assertions.assertNotNull(custom);
     }
 
 

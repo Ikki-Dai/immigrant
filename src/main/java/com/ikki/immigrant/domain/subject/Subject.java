@@ -11,6 +11,27 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.Instant;
 import java.util.EnumSet;
 
+/**
+ * subject have an obvious lifecycle marked as marked by {@link AvailableStatus}
+ * <p>
+ * UNKNOWN --> NORMAL --> FREEZE --> BANNED
+ *
+ * <p>
+ *
+ *
+ * <p>
+ * UNKNOWN: just after sign-up, but phone or email not valid status
+ * <p>
+ * NORMAL: can be used to sign-in and do any operation
+ * <p>
+ * FREEZE: a policy after some invalid operation. such as authenticate failed after 3 times.
+ * at this time, should  reject authentication request directly
+ * <p>
+ * BANNED: forbidden any type request
+ *
+ * @author ikki
+ */
+
 @Getter
 @Setter
 @Table
