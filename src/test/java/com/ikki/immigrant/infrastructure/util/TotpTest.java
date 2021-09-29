@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Base64;
 
-public class TotpTest {
+class TotpTest {
 
     //=AFIEVOEUWFQHOSQAUHQZ33IZKCXF7YQG
     byte[] secret = Base64.getDecoder().decode("QUZJRVZPRVVXRlFIT1NRQVVIUVozM0laS0NYRjdZUUc=");

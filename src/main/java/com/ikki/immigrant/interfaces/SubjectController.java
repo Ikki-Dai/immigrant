@@ -17,7 +17,7 @@ public class SubjectController {
      * @return
      */
     @GetMapping("/{subject}")
-    public ResponseEntity checkOnly(@PathVariable("subject") String subject) {
+    public ResponseEntity<String> checkOnly(@PathVariable("subject") String subject) {
         return ResponseEntity.ok(subject);
     }
 }

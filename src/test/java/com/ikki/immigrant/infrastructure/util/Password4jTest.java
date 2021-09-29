@@ -4,7 +4,7 @@ import com.password4j.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class Password4jTest {
+class Password4jTest {
 
     private static final String PASSWORD = "passw0rd";
 

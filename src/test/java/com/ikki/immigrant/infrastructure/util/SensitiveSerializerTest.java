@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class SensitiveSerializerTest {
+class SensitiveSerializerTest {
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Test
-    public void test() throws JsonProcessingException {
+    void test() throws JsonProcessingException {
         User user = new User();
         user.setEmail("undewtow@redhat.com");
         user.setPhone("13056781234");

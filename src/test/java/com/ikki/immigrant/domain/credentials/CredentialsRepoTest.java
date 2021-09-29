@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @DataJdbcTest
 @Import(DataJdbcConfiguration.class)
-public class CredentialsRepoTest {
+class CredentialsRepoTest {
 
     @Autowired
     CredentialsRepository credentialsRepository;

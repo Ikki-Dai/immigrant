@@ -55,7 +55,7 @@ class ConverterTest {
     }
 
     @Test
-    public void exceptionTest() {
+    void exceptionTest() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new CustomConverter.Str2EsConverter<>(null);
         });

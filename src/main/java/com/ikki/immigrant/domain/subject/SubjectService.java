@@ -3,6 +3,7 @@ package com.ikki.immigrant.domain.subject;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.ikki.immigrant.domain.subject.valueobj.SubjectType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,8 @@ public class SubjectService {
 
     private static final String EMAIL_IDENTIFIER = "@";
     private static final String PHONE_IDENTIFIER = "+";
-    private static final String empty_str = "";
+    private static final String EMPTY_STR = "";
+
     private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
     private final SubjectRepository subjectRepository;
 
@@ -27,28 +29,25 @@ public class SubjectService {
         Optional<Subject> sbj = checkExist(subject);
         if (!sbj.isPresent()) {
             Subject signupObj = new Subject();
+            signupObj.setEmail(EMPTY_STR);
+            signupObj.setUsername(EMPTY_STR);
+            signupObj.setPhone(EMPTY_STR);
             signupObj.setAvailable(Subject.AvailableStatus.NORMAL);
             signupObj.setValid(EnumSet.noneOf(Subject.ValidStatus.class));
-            if (subject.indexOf(EMAIL_IDENTIFIER) > 0) {
-                signupObj.setEmail(subject);
-                signupObj.setUsername(empty_str);
-                signupObj.setPhone(empty_str);
-            } else if (subject.indexOf(PHONE_IDENTIFIER) == 0) {
-                try {
-                    Phonenumber.PhoneNumber phoneNumber = phoneUtil.parse(subject, "ZZ");
-                    if (phoneUtil.isValidNumber(phoneNumber)) {
-                        signupObj.setEmail(empty_str);
-                        signupObj.setUsername(empty_str);
-                        signupObj.setPhone(subject);
-                    }
-                } catch (NumberParseException e) {
-                    log.warn("subject: [{}] may not a phone number: {}", subject, e.getMessage());
-                    return Optional.empty();
-                }
-            } else {
-                signupObj.setEmail(empty_str);
-                signupObj.setUsername(subject);
-                signupObj.setPhone(empty_str);
+
+            SubjectType subjectType = checkType(subject);
+            switch (subjectType) {
+                case EMAIL:
+                    signupObj.setEmail(EMPTY_STR);
+                    break;
+                case PHONE:
+                    signupObj.setPhone(EMPTY_STR);
+                    break;
+                case USER_NAME:
+                    signupObj.setUsername(EMPTY_STR);
+                    break;
+                default:
+                    break;
             }
             subjectRepository.save(signupObj);
             return Optional.of(signupObj);
@@ -57,24 +56,36 @@ public class SubjectService {
     }
 
     public Optional<Subject> checkExist(String subject) {
-        Optional<Subject> sbj = Optional.empty();
-        if (subject.indexOf(EMAIL_IDENTIFIER) > 0) {
-            return subjectRepository.findByEmail(subject);
+        SubjectType subjectType = checkType(subject);
+        switch (subjectType) {
+            case EMAIL:
+                return subjectRepository.findByEmail(subject);
+            case PHONE:
+                return subjectRepository.findByPhone(subject);
+            case USER_NAME:
+                return subjectRepository.findByUsername(subject);
+            default:
+                return Optional.empty();
         }
+    }
+
+    public SubjectType checkType(String subject) {
+        if (subject.contains(EMAIL_IDENTIFIER)) {
+            return SubjectType.EMAIL;
+        }
+
         if (subject.indexOf(PHONE_IDENTIFIER) == 0) {
             try {
                 Phonenumber.PhoneNumber phoneNumber = phoneUtil.parse(subject, "ZZ");
                 if (phoneUtil.isValidNumber(phoneNumber)) {
-                    return subjectRepository.findByPhone(subject);
+                    return SubjectType.PHONE;
                 }
             } catch (NumberParseException e) {
                 log.warn("subject: [{}] may not a phone number: {}", subject, e.getMessage());
+                return SubjectType.UNKNOWN;
             }
-        } else {
-            sbj = subjectRepository.findByUsername(subject);
         }
-        return sbj;
+
+        return SubjectType.USER_NAME;
     }
-
-
 }

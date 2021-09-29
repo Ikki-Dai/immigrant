@@ -50,7 +50,7 @@ public class CustomConverter {
 
         @Override
         public JdbcValue convert(EnumSet enumSet) {
-            if (enumSet.size() == 0) {
+            if (enumSet.isEmpty()) {
                 return JdbcValue.of("", JDBCType.VARCHAR);
             }
             StringBuilder stringBuilder = new StringBuilder();

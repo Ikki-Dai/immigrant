@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-public class AuditAwareTest {
+class AuditAwareTest {
 
     @Test
-    public void test() {
+    void test() {
         AuditAware auditAware = new AuditAware();
         Optional<String> auditor = auditAware.getCurrentAuditor();
         Assertions.assertTrue(!auditor.isPresent());

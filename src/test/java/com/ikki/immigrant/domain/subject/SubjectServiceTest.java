@@ -11,7 +11,7 @@ import java.util.EnumSet;
 import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class SubjectServiceTest {
+class SubjectServiceTest {
 
     @Autowired
     SubjectService subjectService;
@@ -39,7 +39,7 @@ public class SubjectServiceTest {
             "+8613112341235, true",
             "+, false"
     })
-    public void testExist(String subject, boolean exist) {
+    void testExist(String subject, boolean exist) {
         Optional<Subject> optSub = subjectService.checkExist(subject);
         Assertions.assertFalse(optSub.isPresent() ^ exist);
     }
@@ -52,7 +52,7 @@ public class SubjectServiceTest {
             "+13372464366, true",
             "+, false"
     })
-    public void signupTest(String subject, boolean exist) {
+    void signupTest(String subject, boolean exist) {
         Optional<Subject> subObj = subjectService.signup(subject);
         subObj.ifPresent(System.out::println);
         Assertions.assertFalse(subObj.isPresent() ^ exist);

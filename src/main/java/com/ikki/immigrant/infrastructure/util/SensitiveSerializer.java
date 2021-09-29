@@ -13,7 +13,7 @@ public class SensitiveSerializer extends StdSerializer<String> implements Contex
 
     private static final String STR_MASK = "****";
     private static final SensitiveSerializer INSTANCE = new SensitiveSerializer();
-    private SensitiveMask sensitiveMask;
+    private transient SensitiveMask sensitiveMask;
 
     public SensitiveSerializer() {
         super(String.class);
@@ -51,7 +51,7 @@ public class SensitiveSerializer extends StdSerializer<String> implements Contex
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
-        SensitiveMask sensitiveMask = null;
+//        SensitiveMask sensitiveMask = null;
         if (null != property) {
             sensitiveMask = property.getAnnotation(SensitiveMask.class);
         }

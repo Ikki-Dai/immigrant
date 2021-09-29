@@ -4,7 +4,7 @@ import io.undertow.util.HexConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class HexConvertTest {
+class HexConvertTest {
 
     @Test
     void toStr() {

@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-public class LombokAndMapStructTest {
+class LombokAndMapStructTest {
 
 
     @Test

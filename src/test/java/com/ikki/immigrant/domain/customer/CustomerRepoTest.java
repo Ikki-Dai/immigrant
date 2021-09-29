@@ -10,7 +10,7 @@ import java.util.BitSet;
 
 @DataJdbcTest
 @Import(DataJdbcConfiguration.class)
-public class CustomerRepoTest {
+class CustomerRepoTest {
 
     @Autowired
     CustomerRepository customerRepository;
