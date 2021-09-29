@@ -65,7 +65,7 @@ public class RedissonTest {
         bloomFilter.tryInit(insertions, 0.01);
         String subject;
 
-        Set<String> subSet = new HashSet(insertions);
+        Set<String> subSet = new HashSet<>(insertions);
         LongAdder l1 = new LongAdder();
         for (int i = 0; i < insertions; i++) {
             subject = RandomString.make();
