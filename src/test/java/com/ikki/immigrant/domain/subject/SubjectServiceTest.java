@@ -1,23 +1,40 @@
 package com.ikki.immigrant.domain.subject;
 
+import com.ikki.immigrant.infrastructure.advice.BizExceptionAdvice;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import redis.embedded.RedisServer;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Optional;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
+@Import(BizExceptionAdvice.class)
 class SubjectServiceTest {
-
+    private static RedisServer redisServer;
     @Autowired
     SubjectService subjectService;
-
     @Autowired
     SubjectRepository subjectRepository;
+
+    @BeforeAll
+    public static void setupRedis() throws IOException {
+        redisServer = RedisServer.builder().port(6379).setting("maxmemory 128M").build();
+        redisServer.start();
+    }
+
+    @AfterAll
+    public static void tearDownRedis() throws IOException {
+        redisServer.stop();
+    }
 
     @BeforeEach
     void clear() {

@@ -3,18 +3,22 @@ package com.ikki.immigrant.infrastructure.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ikki.immigrant.infrastructure.advice.BizExceptionAdvice;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@WebMvcTest
+@Import(BizExceptionAdvice.class)
 class SensitiveSerializerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
 
     @Test
     void test() throws JsonProcessingException {

@@ -1,5 +1,6 @@
 package com.ikki.immigrant.infrastructure.util;
 
+import com.ikki.immigrant.infrastructure.advice.BizExceptionAdvice;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.*;
@@ -9,7 +10,7 @@ import org.redisson.api.RedissonClient;
 import org.redisson.codec.KryoCodec;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 import redis.embedded.RedisServer;
@@ -19,8 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.LongAdder;
 
-@DataRedisTest
-@Import(RedissonAutoConfiguration.class)
+@SpringBootTest
+@Import({RedissonAutoConfiguration.class, BizExceptionAdvice.class})
 @Slf4j
 public class RedissonTest {
 
@@ -33,13 +34,13 @@ public class RedissonTest {
 
     @BeforeAll
     public static void setupRedis() throws IOException {
-//        redisServer = RedisServer.builder().port(6379).setting("maxmemory 128M").build();
-//        redisServer.start();
+        redisServer = RedisServer.builder().port(6379).setting("maxmemory 128M").build();
+        redisServer.start();
     }
 
     @AfterAll
     public static void tearDownRedis() throws IOException {
-//        redisServer.stop();
+        redisServer.stop();
     }
 
     @BeforeEach
