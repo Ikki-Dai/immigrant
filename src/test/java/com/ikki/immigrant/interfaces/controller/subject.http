@@ -1,0 +1,2 @@
+#@no-log
+GET localhost:8080//subject/test

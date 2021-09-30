@@ -38,13 +38,13 @@ public class SubjectService {
             SubjectType subjectType = checkType(subject);
             switch (subjectType) {
                 case EMAIL:
-                    signupObj.setEmail(EMPTY_STR);
+                    signupObj.setEmail(subject);
                     break;
                 case PHONE:
-                    signupObj.setPhone(EMPTY_STR);
+                    signupObj.setPhone(subject);
                     break;
                 case USER_NAME:
-                    signupObj.setUsername(EMPTY_STR);
+                    signupObj.setUsername(subject);
                     break;
                 default:
                     break;
