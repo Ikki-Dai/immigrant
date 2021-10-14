@@ -1,21 +1,24 @@
 package com.ikki.immigrant.infrastructure.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 
+@Slf4j
 public class SensitiveSerializer extends StdSerializer<String> implements ContextualSerializer {
+    private String STR_MASK = "??";
 
-    private static final String STR_MASK = "****";
-    private static final SensitiveSerializer INSTANCE = new SensitiveSerializer();
     private transient SensitiveMask sensitiveMask;
 
-    public SensitiveSerializer() {
+    protected SensitiveSerializer() {
         super(String.class);
     }
 
@@ -24,39 +27,43 @@ public class SensitiveSerializer extends StdSerializer<String> implements Contex
         this.sensitiveMask = sensitiveMask;
     }
 
+
     @Override
     public void serialize(String s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        if (null == sensitiveMask) {
+            throw new JsonGenerationException("not found valid sensitiveMask Annotation", jsonGenerator);
+        }
+
         if (s.isEmpty()) {
             jsonGenerator.writeString(s);
             return;
         }
 
-        int start = 1;
-        int end = -1;
-        String ns;
-        if (null != sensitiveMask) {
-            start = sensitiveMask.start();
-            end = sensitiveMask.end();
+        int start = sensitiveMask.prefixLength();
+        int end = sensitiveMask.suffixLength();
+
+        STR_MASK = sensitiveMask.mask();
+        int maskLength = sensitiveMask.maskKeep();
+        String locStr = sensitiveMask.locationBefore();
+
+        int index = s.lastIndexOf(locStr);
+
+        end = index > 0 ? index - end : s.length() - end;
+        // mask content too short
+        if (start < 0 || start >= end || start > s.length() || (end - start) < maskLength || end > s.length()) {
+            log.warn("mask all occur param: startIndex:[{}], endIndex:[{}] with context: [{}], loc:[{}]", start, end, s, locStr);
+            start = 0;
+            end = index > 0 ? index : s.length() - 1;
         }
-        end += s.length();
-        if (start > end || end < 0 || start > s.length()) {
-            // if unexpected index occurs, all data mask
-            jsonGenerator.writeString(STR_MASK);
-            return;
-        }
-        ns = new StringBuilder(s).replace(start, end, STR_MASK).toString();
+
+        String ns = new StringBuilder(s).replace(start, end, STR_MASK).toString();
         jsonGenerator.writeString(ns);
     }
 
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
-        if (null != property) {
-            sensitiveMask = property.getAnnotation(SensitiveMask.class);
-        }
-        if (null != sensitiveMask) {
-            return new SensitiveSerializer(sensitiveMask);
-        }
-        return INSTANCE;
+        log.debug("mask [{}]", property.getMember().getFullName());
+        return new SensitiveSerializer(property.getAnnotation(SensitiveMask.class));
     }
 }

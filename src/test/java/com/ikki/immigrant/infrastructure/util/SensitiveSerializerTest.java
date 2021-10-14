@@ -33,12 +33,10 @@ class SensitiveSerializerTest {
     @Getter
     @Setter
     public static class User {
-        @JsonSerialize(using = SensitiveSerializer.class)
-        @SensitiveMask(start = 3, end = -4)
+        @SensitiveMask(prefixLength = 3,  suffixLength = 4)
         private String phone;
 
-        @JsonSerialize(using = SensitiveSerializer.class)
-        @SensitiveMask(start = 2, end = -6)
+        @SensitiveMask(prefixLength = 2, suffixLength = -6)
         private String email;
     }
 
