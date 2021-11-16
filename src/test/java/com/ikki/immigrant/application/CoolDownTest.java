@@ -4,6 +4,8 @@ import com.ikki.immigrant.application.authentication.CdVO;
 import com.ikki.immigrant.application.authentication.CoolDownHandler;
 import com.ikki.immigrant.infrastructure.exception.BizException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
@@ -60,74 +62,50 @@ public class CoolDownTest {
         Assertions.assertNull(redisTemplate.opsForValue().get("COOLDOWN:" + sub));
     }
 
-    @Test()
-    void loginFailed() throws InterruptedException {
+    @ParameterizedTest
+    @CsvSource({
+            "1, 0, failed",
+            "2, 0, failed",
+            "3, 60, retry",
+            "4, 120, retry",
+            "5, 300, retry",
+            "6, 86400, lock"})
+    void loginFailed(int times, long wait, String msg) throws InterruptedException {
+        //prepare
+        CdVO obj = new CdVO();
+        obj.setAttempts(times);
+
+        // wait no enough time
+        obj.setLastTime(System.currentTimeMillis() - Math.abs(wait * 1000L - 5_000L));
+        redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
+
+        BizException bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
+        Assertions.assertTrue(bizException.getMessage().contains(msg));
+        CdVO obj2 = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
+        System.out.println(obj2);
+
+
+        // wait enough time
+        obj.setLastTime(System.currentTimeMillis() - (wait * 1000L + 5_000L));
+        redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
+
+        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
+        Assertions.assertEquals("login failed;", bizException.getMessage());
+
+        obj2 = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
+        System.out.println(obj2);
+
+    }
+
+    @Test
+    void loginAfterExpire() {
+        CdVO obj = new CdVO();
+        obj.setAttempts(6);
+        obj.setLastTime(System.currentTimeMillis() - 86400_000L - 5_000L);
+        redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
+
         BizException bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
         Assertions.assertEquals("login failed;", bizException.getMessage());
-        CdVO obj = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
-        System.out.println(obj);
-        Assertions.assertEquals(1, obj.getAttempts());
-
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertEquals("login failed;", bizException.getMessage());
-        obj = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
-        System.out.println(obj);
-        Assertions.assertEquals(2, obj.getAttempts());
-
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertEquals("login failed;", bizException.getMessage());
-        obj = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
-        System.out.println(obj);
-        Assertions.assertEquals(3, obj.getAttempts());
-        //3++
-        // 4th retry failed
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertTrue(bizException.getMessage().startsWith("pls retry after"));
-        // 4th retry success
-        obj = new CdVO();
-        obj.setAttempts(3);
-        obj.setLastTime(System.currentTimeMillis() - 60_000L);
-        redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
-        //
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertEquals("login failed;", bizException.getMessage());
-        obj = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
-        System.out.println(obj);
-        Assertions.assertEquals(4, obj.getAttempts());
-        // 5th failed
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertTrue(bizException.getMessage().startsWith("pls retry after"));
-        //5th success
-        obj = new CdVO();
-        obj.setAttempts(4);
-        obj.setLastTime(System.currentTimeMillis() - 120_000L);
-        redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
-
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertEquals("login failed;", bizException.getMessage());
-        obj = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
-        System.out.println(obj);
-        Assertions.assertEquals(5, obj.getAttempts());
-
-        // 6th try failed
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertTrue(bizException.getMessage().startsWith("pls retry after"));
-        // 6th retry success
-
-        obj = new CdVO();
-        obj.setAttempts(5);
-        obj.setLastTime(System.currentTimeMillis() - 300_000L);
-        redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
-
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertEquals("login failed;", bizException.getMessage());
-        obj = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
-        System.out.println(obj);
-        Assertions.assertEquals(6, obj.getAttempts());
-
-        //
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
-        Assertions.assertEquals("arrival max attempts, account have been locked", bizException.getMessage());
     }
 
 }

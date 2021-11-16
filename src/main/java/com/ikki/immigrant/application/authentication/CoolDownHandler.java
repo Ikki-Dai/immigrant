@@ -72,22 +72,27 @@ public class CoolDownHandler {
         key = getKey(joinPoint);
         CdVO cdVO = redisTemplate.opsForValue().get(PREFIX + key);
         // process key;
-        if (null == cdVO) { // first time to try
-            return joinPoint.proceed();
-        } else { // have been failed
+        if (null != cdVO) {
+            // blocked
             if (cdVO.getAttempts() >= coolDown.maxAttempts()) {
-                throw new BizException("arrival max attempts, account have been locked");
+                // wait
+                long wait = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - cdVO.getLastTime());
+                if (wait > coolDown.clearAfter()) {
+                    redisTemplate.delete(PREFIX + key);
+                } else {
+                    throw new BizException("arrival max attempts, account have been locked");
+                }
+            } else {
+                // free times has cost
+                long[] interval = coolDown.interval();
+                long wait = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - cdVO.getLastTime());
+                int attempts = cdVO.getAttempts();
+                if (wait < interval[attempts - 1]) {
+                    throw new BizException(String.format("pls retry after %d seconds", wait));
+                }
             }
-            // free times has cost
-            long[] interval = coolDown.interval();
-            long wait = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - cdVO.getLastTime());
-
-            int attempts = cdVO.getAttempts();
-            if (wait < interval[attempts - 1]) {
-                throw new BizException(String.format("pls retry after %d seconds", wait));
-            }
-            return joinPoint.proceed();
         }
+        return joinPoint.proceed();
     }
 
     @AfterReturning(value = "coolDown()", returning = "r")
