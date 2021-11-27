@@ -3,6 +3,7 @@ package com.ikki.immigrant.application;
 import com.ikki.immigrant.application.authentication.CdVO;
 import com.ikki.immigrant.application.authentication.CoolDownHandler;
 import com.ikki.immigrant.infrastructure.exception.BizException;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -58,7 +59,7 @@ public class CoolDownTest {
 
     @Test
     void loginSuccess() {
-        coolDownTarget.loginSuccess(sub);
+        coolDownTarget.loginSuccess(RandomString.make(5), sub, RandomString.make(5));
         Assertions.assertNull(redisTemplate.opsForValue().get("COOLDOWN:" + sub));
     }
 
@@ -79,7 +80,7 @@ public class CoolDownTest {
         obj.setLastTime(System.currentTimeMillis() - Math.abs(wait * 1000L - 5_000L));
         redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
 
-        BizException bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
+        BizException bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(RandomString.make(5), sub, RandomString.make(5)));
         Assertions.assertTrue(bizException.getMessage().contains(msg));
         CdVO obj2 = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
         System.out.println(obj2);
@@ -89,7 +90,7 @@ public class CoolDownTest {
         obj.setLastTime(System.currentTimeMillis() - (wait * 1000L + 5_000L));
         redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
 
-        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
+        bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(RandomString.make(5), sub, RandomString.make(5)));
         Assertions.assertEquals("login failed;", bizException.getMessage());
 
         obj2 = redisTemplate.opsForValue().get("COOLDOWN:" + sub);
@@ -104,7 +105,7 @@ public class CoolDownTest {
         obj.setLastTime(System.currentTimeMillis() - 86400_000L - 5_000L);
         redisTemplate.opsForValue().set("COOLDOWN:" + sub, obj);
 
-        BizException bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(sub));
+        BizException bizException = Assertions.assertThrows(BizException.class, () -> coolDownTarget.loginFailed(RandomString.make(5), sub, RandomString.make(5)));
         Assertions.assertEquals("login failed;", bizException.getMessage());
     }
 

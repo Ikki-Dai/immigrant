@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 public class CoolDownTarget {
 
     @CoolDown("sub")
-    public String loginSuccess(String sub) {
+    public String loginSuccess(String a, String sub, String b) {
         return "success";
     }
 
     @CoolDown("sub")
-    public String loginFailed(String sub) {
+    public String loginFailed(String a, String sub, String b) {
         throw new BizException("login failed;");
     }
 
