@@ -1,4 +1,4 @@
-package com.ikki.immigrant.domain.subject;
+package com.ikki.immigrant.domain.subject.entity;
 
 import lombok.Getter;
 import lombok.Setter;

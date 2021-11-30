@@ -1,9 +1,11 @@
 package com.ikki.immigrant.interfaces;
 
+import com.ikki.immigrant.application.qrlogin.ScanLoginService;
 import com.ikki.immigrant.infrastructure.advice.BizExceptionAdvice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @Import(BizExceptionAdvice.class)
 class SubjectControllerTest {
+    @MockBean
+    ScanLoginService scanLoginService;
     @Autowired
     private MockMvc mvc;
 

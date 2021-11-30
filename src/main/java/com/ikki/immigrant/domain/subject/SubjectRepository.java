@@ -1,5 +1,6 @@
 package com.ikki.immigrant.domain.subject;
 
+import com.ikki.immigrant.domain.subject.entity.Subject;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

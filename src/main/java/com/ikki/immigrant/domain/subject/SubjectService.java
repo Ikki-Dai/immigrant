@@ -3,6 +3,7 @@ package com.ikki.immigrant.domain.subject;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.ikki.immigrant.domain.subject.entity.Subject;
 import com.ikki.immigrant.domain.subject.valueobj.SubjectType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class SubjectService {
                     signupObj.setUsername(subject);
                     break;
                 default:
-                    break;
+                    return Optional.empty();
             }
             subjectRepository.save(signupObj);
             return Optional.of(signupObj);

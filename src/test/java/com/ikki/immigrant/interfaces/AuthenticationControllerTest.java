@@ -31,9 +31,9 @@ class AuthenticationControllerTest {
     @Test
     void getTest() throws Exception {
         String clientId = RandomString.make(8);
-        mvc.perform(get("/authentication/qr/" + clientId).accept(MediaType.ALL))
+        mvc.perform(get("/authentication/qr/").accept(MediaType.ALL))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/authentication/qr/listen/*@*"))
+                .andExpect(redirectedUrlPattern("/authentication/qr/*"))
                 .andDo(print());
     }
 

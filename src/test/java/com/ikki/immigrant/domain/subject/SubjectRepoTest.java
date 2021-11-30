@@ -1,5 +1,6 @@
 package com.ikki.immigrant.domain.subject;
 
+import com.ikki.immigrant.domain.subject.entity.Subject;
 import com.ikki.immigrant.infrastructure.config.DataJdbcConfiguration;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Assertions;

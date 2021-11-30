@@ -1,7 +1,7 @@
 package com.ikki.immigrant.infrastructure.config;
 
 import com.ikki.immigrant.domain.credentials.Credentials;
-import com.ikki.immigrant.domain.subject.Subject;
+import com.ikki.immigrant.domain.subject.entity.Subject;
 import com.ikki.immigrant.infrastructure.CustomConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

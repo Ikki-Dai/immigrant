@@ -1,0 +1,11 @@
+###
+#@no-redirect
+GET {{host}}/authentication/qr/12345
+
+###
+POST {{host}}/authentication/qr/12345
+Content-Type: application/json
+
+{
+  "message": ""
+}

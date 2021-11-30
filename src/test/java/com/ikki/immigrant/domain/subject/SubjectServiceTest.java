@@ -1,5 +1,6 @@
 package com.ikki.immigrant.domain.subject;
 
+import com.ikki.immigrant.domain.subject.entity.Subject;
 import com.ikki.immigrant.infrastructure.advice.BizExceptionAdvice;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
