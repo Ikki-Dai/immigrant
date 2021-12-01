@@ -32,7 +32,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
     private static final String SSE_REDIRECT_REGISTRY = "SSE-REDIRECT-REGISTRY";
     private static final String SSE_BACKUP = "SSE-BACKUP:";
 
-    private final String BROKER_ID;
+    private final String brokerId;
     private final long sseTimeout;
     private final long topicDelayThreshold;
     private final RedissonClient redisson;
@@ -65,8 +65,8 @@ public class ScanLoginServiceImpl implements ScanLoginService {
         /**
          * registry current server instance as a broker
          */
-        BROKER_ID = checkAndRegistryBroker();
-        channel = "SSE-" + BROKER_ID;
+        brokerId = checkAndRegistryBroker();
+        channel = "SSE-" + brokerId;
     }
 
     private String checkAndRegistryBroker() {
@@ -108,7 +108,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
             }
         });
         // listen setup success
-        brokerRegistry.putIfExists(BROKER_ID, BrokerStats.SERVING);
+        brokerRegistry.putIfExists(brokerId, BrokerStats.SERVING);
     }
 
     private void send(SseEmitter sseEmitter, SseValueObject sseValueObject) {
@@ -176,7 +176,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
          * while client registry to topic failed
          * in case of the another client connect to server wait for your token
          */
-        boolean b = clientRedirectAddress.fastPutIfAbsent(clientId, BROKER_ID);
+        boolean b = clientRedirectAddress.fastPutIfAbsent(clientId, brokerId);
         // already register into broker
         if (!b) {
             threadPoolTaskExecutor.submit(() -> {
@@ -201,7 +201,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
 
     @PreDestroy
     void destroy() throws InterruptedException {
-        brokerRegistry.putIfExists(BROKER_ID, BrokerStats.TERMINATING);
+        brokerRegistry.putIfExists(brokerId, BrokerStats.TERMINATING);
         log.info("wait all client finished");
         while (sseClientHandler.size() > 0) {
             Thread.sleep(1000L);

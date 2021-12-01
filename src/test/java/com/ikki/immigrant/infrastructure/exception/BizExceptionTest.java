@@ -12,14 +12,14 @@ class BizExceptionTest {
 
     @Test
     void stackTraceWritable() throws Exception {
-        Exception e = new BizException("test", null, false, true);
+        Exception e = BizException.of("test");
         System.out.println(e.getStackTrace().length);
-        Assertions.assertTrue(e.getStackTrace().length > 1);
+        Assertions.assertFalse(e.getStackTrace().length > 1);
     }
 
     @Test
     void stackTraceUnWritable() throws Exception {
-        Exception e = new BizException("test", null, false, false);
+        Exception e = BizException.of("test");
         System.out.println(e.getStackTrace().length);
         Assertions.assertEquals(0, e.getStackTrace().length);
     }

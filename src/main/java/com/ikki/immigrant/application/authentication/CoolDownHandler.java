@@ -32,13 +32,13 @@ public class CoolDownHandler {
 
     @Pointcut("@annotation(com.ikki.immigrant.application.authentication.CoolDown)")
     public void coolDown() {
+        //aop method
     }
 
     private String getKey(ProceedingJoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         MethodSignature methodSignature = ((MethodSignature) joinPoint.getSignature());
         String methodName = methodSignature.getName();
-        // get from cache;
         Integer index = cache.get(methodName);
         if (null != index) {
             return String.valueOf(args[index]);
@@ -65,7 +65,6 @@ public class CoolDownHandler {
                 break;
             }
         }
-        // save into threadlocal;
         CoolDownContext ctx = new CoolDownContext();
         ctx.setCoolDown(coolDown);
         ctx.setKey(key);
@@ -78,24 +77,22 @@ public class CoolDownHandler {
         String key = getKey(joinPoint);
         CoolDown coolDown = threadLocal.get().getCoolDown();
         CdVO cdVO = redisTemplate.opsForValue().get(PREFIX + key);
-        // process key;
+
         if (null != cdVO) {
-            // blocked
             if (cdVO.getAttempts() >= coolDown.maxAttempts()) {
-                // wait
+
                 long wait = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - cdVO.getLastTime());
                 if (wait > coolDown.clearAfter()) {
                     redisTemplate.delete(PREFIX + key);
                 } else {
-                    throw new BizException("arrival max attempts, account have been locked");
+                    throw BizException.of("arrival max attempts, account have been locked");
                 }
             } else {
-                // free times has cost
                 long[] interval = coolDown.interval();
                 long wait = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - cdVO.getLastTime());
                 int attempts = cdVO.getAttempts();
                 if (wait < interval[attempts - 1]) {
-                    throw new BizException(String.format("pls retry after %d seconds", wait));
+                    throw BizException.of(String.format("pls retry after %d seconds", wait));
                 }
             }
         }

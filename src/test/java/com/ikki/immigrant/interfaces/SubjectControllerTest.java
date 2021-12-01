@@ -32,7 +32,7 @@ class SubjectControllerTest {
     @Test
     void getTest1() throws Exception {
         mvc.perform(get("/subject/test").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().is(409))
                 .andDo(print());
     }
 

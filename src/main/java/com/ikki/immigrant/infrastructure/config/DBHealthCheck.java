@@ -29,7 +29,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Configuration
-@Slf4j
 public class DBHealthCheck {
 
     private final Collection<DataSourcePoolMetadataProvider> metadataProviders;
