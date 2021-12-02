@@ -145,13 +145,13 @@ public class ScanLoginServiceImpl implements ScanLoginService {
 
     @Override
     public boolean publish(String clientId, SseValueObject sseValueObject) {
-        String brokerId = clientRedirectAddress.get(clientId);
-        BrokerStats stats = brokerRegistry.get(brokerId);
+        String bId = clientRedirectAddress.get(clientId);
+        BrokerStats stats = brokerRegistry.get(bId);
         if (stats != BrokerStats.SERVING) {
             return false;
         }
         // try to publish
-        RReliableTopic topic = redisson.getReliableTopic("SSE-" + brokerId);
+        RReliableTopic topic = redisson.getReliableTopic("SSE-" + bId);
         topic.publish(sseValueObject);
         return true;
     }
