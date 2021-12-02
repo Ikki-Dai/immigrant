@@ -70,18 +70,18 @@ public class ScanLoginServiceImpl implements ScanLoginService {
     }
 
     private String checkAndRegistryBroker() {
-        String brokerId = null;
+        String bId = null;
         for (int i = 0; i < 3; i++) {
-            brokerId = RandomString.make(10);
-            boolean b = brokerRegistry.fastPutIfAbsent(brokerId, BrokerStats.REGISTER);
+            bId = RandomString.make(10);
+            boolean b = brokerRegistry.fastPutIfAbsent(bId, BrokerStats.REGISTER);
             if (b) {
                 break;
             }
         }
-        if (!StringUtils.hasText(brokerId)) {
+        if (!StringUtils.hasText(bId)) {
             throw new IllegalArgumentException("tried 3 times for register sse channel failed pls alter large range for channel id");
         }
-        return brokerId;
+        return bId;
     }
 
     @PostConstruct
