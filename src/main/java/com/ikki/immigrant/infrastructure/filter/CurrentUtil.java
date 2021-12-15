@@ -8,10 +8,11 @@ import ua_parser.Client;
  */
 public class CurrentUtil {
 
-    private final static InheritableThreadLocal<Client> currentUserAgent = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<Client> currentUserAgent = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<Tenant> currentTenant = new InheritableThreadLocal<>();
 
-    private final static InheritableThreadLocal<Tenant> currentTenant = new InheritableThreadLocal<>();
-
+    private CurrentUtil() {
+    }
 
     /**
      * process userAgent

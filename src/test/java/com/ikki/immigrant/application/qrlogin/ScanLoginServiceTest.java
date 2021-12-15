@@ -1,6 +1,8 @@
 package com.ikki.immigrant.application.qrlogin;
 
 import org.junit.jupiter.api.*;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -19,6 +21,9 @@ class ScanLoginServiceTest {
 
     @SpyBean
     ScanLoginService scanLoginService;
+
+    @Autowired
+    RedissonClient redissonClient;
 
     @BeforeAll
     public static void setupRedis() throws IOException {
@@ -72,6 +77,7 @@ class ScanLoginServiceTest {
         sseValueObject.setData("user xxx confirm login");
 
         scanLoginService.publish(clientId, sseValueObject);
+
     }
 
 }

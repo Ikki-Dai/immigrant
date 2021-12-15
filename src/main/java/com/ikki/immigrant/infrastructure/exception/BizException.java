@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public class BizException extends RuntimeException {
 
     private final HttpStatus httpStatus;
-    private final Object[] formatParameters;
+    private transient final Object[] formatParameters;
 
     private BizException(String message) {
         this(HttpStatus.BAD_REQUEST, null, message, null, false, false);
@@ -21,7 +21,7 @@ public class BizException extends RuntimeException {
     }
 
     private BizException(HttpStatus httpStatus, String message, Object[] formatParameters) {
-        this(httpStatus,formatParameters, message, null, false, false);
+        this(httpStatus, formatParameters, message, null, false, false);
     }
 
     protected BizException(HttpStatus httpStatus, Object[] formatParameters, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
