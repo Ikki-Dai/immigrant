@@ -16,7 +16,7 @@ public class CoolDownTarget {
 
     @CoolDown("sub")
     public String loginFailed(String a, String sub, String b) {
-        throw new BizException("login failed;");
+        throw BizException.of("login failed;");
     }
 
 

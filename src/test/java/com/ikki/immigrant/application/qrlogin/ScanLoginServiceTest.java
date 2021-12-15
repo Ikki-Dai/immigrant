@@ -34,7 +34,7 @@ class ScanLoginServiceTest {
     @BeforeEach
     void initCheck() {
 
-        String brokerId = (String) ReflectionTestUtils.getField(scanLoginService, "BROKER_ID");
+        String brokerId = (String) ReflectionTestUtils.getField(scanLoginService, "brokerId");
         Assertions.assertEquals(10, brokerId.length());
 
         String channel = (String) ReflectionTestUtils.getField(scanLoginService, "channel");

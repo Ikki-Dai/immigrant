@@ -1,6 +1,5 @@
 package com.ikki.immigrant.infrastructure.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.shardingjdbc.jdbc.core.datasource.EncryptDataSource;
 import org.apache.shardingsphere.shardingjdbc.jdbc.core.datasource.MasterSlaveDataSource;
 import org.apache.shardingsphere.shardingjdbc.jdbc.core.datasource.ShadowDataSource;
@@ -29,7 +28,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Configuration
-@Slf4j
 public class DBHealthCheck {
 
     private final Collection<DataSourcePoolMetadataProvider> metadataProviders;

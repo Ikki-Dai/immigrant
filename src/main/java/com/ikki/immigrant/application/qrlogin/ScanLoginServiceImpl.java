@@ -32,7 +32,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
     private static final String SSE_REDIRECT_REGISTRY = "SSE-REDIRECT-REGISTRY";
     private static final String SSE_BACKUP = "SSE-BACKUP:";
 
-    private final String BROKER_ID;
+    private final String brokerId;
     private final long sseTimeout;
     private final long topicDelayThreshold;
     private final RedissonClient redisson;
@@ -65,23 +65,23 @@ public class ScanLoginServiceImpl implements ScanLoginService {
         /**
          * registry current server instance as a broker
          */
-        BROKER_ID = checkAndRegistryBroker();
-        channel = "SSE-" + BROKER_ID;
+        brokerId = checkAndRegistryBroker();
+        channel = "SSE-" + brokerId;
     }
 
-    String checkAndRegistryBroker() {
-        String brokerId = null;
+    private String checkAndRegistryBroker() {
+        String bId = null;
         for (int i = 0; i < 3; i++) {
-            brokerId = RandomString.make(10);
-            boolean b = brokerRegistry.fastPutIfAbsent(brokerId, BrokerStats.REGISTER);
+            bId = RandomString.make(10);
+            boolean b = brokerRegistry.fastPutIfAbsent(bId, BrokerStats.REGISTER);
             if (b) {
                 break;
             }
         }
-        if (!StringUtils.hasText(brokerId)) {
+        if (!StringUtils.hasText(bId)) {
             throw new IllegalArgumentException("tried 3 times for register sse channel failed pls alter large range for channel id");
         }
-        return brokerId;
+        return bId;
     }
 
     @PostConstruct
@@ -108,7 +108,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
             }
         });
         // listen setup success
-        brokerRegistry.putIfExists(BROKER_ID, BrokerStats.SERVING);
+        brokerRegistry.putIfExists(brokerId, BrokerStats.SERVING);
     }
 
     void send(SseEmitter sseEmitter, SseValueObject sseValueObject) {
@@ -145,8 +145,8 @@ public class ScanLoginServiceImpl implements ScanLoginService {
 
     @Override
     public boolean publish(String clientId, SseValueObject sseValueObject) {
-        String brokerId = clientRedirectAddress.get(clientId);
-        BrokerStats stats = brokerRegistry.get(brokerId);
+        String bId = clientRedirectAddress.get(clientId);
+        BrokerStats stats = brokerRegistry.get(bId);
         if (stats != BrokerStats.SERVING) {
             return false;
         }
@@ -175,7 +175,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
          * while client registry to topic failed
          * in case of the another client connect to server wait for your token
          */
-        boolean b = clientRedirectAddress.fastPutIfAbsent(clientId, BROKER_ID);
+        boolean b = clientRedirectAddress.fastPutIfAbsent(clientId, brokerId);
         // already register into broker
         if (!b) {
             threadPoolTaskExecutor.submit(() -> {
@@ -200,12 +200,12 @@ public class ScanLoginServiceImpl implements ScanLoginService {
 
     @PreDestroy
     void destroy() throws InterruptedException {
-        brokerRegistry.putIfExists(BROKER_ID, BrokerStats.TERMINATING);
+        brokerRegistry.putIfExists(brokerId, BrokerStats.TERMINATING);
         log.info("wait all client finished");
         while (sseClientHandler.size() > 0) {
             Thread.sleep(1000L);
         }
-        brokerRegistry.remove(BROKER_ID);
+        brokerRegistry.remove(brokerId);
     }
 
 

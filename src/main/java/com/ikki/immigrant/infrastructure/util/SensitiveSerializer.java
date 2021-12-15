@@ -8,14 +8,14 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+import org.springframework.util.StringUtils;
+
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
 @Slf4j
 public class SensitiveSerializer extends StdSerializer<String> implements ContextualSerializer {
-    private String STR_MASK = "??";
-
     private transient SensitiveMask sensitiveMask;
 
     protected SensitiveSerializer() {
@@ -42,7 +42,8 @@ public class SensitiveSerializer extends StdSerializer<String> implements Contex
         int start = sensitiveMask.prefixLength();
         int end = sensitiveMask.suffixLength();
 
-        STR_MASK = sensitiveMask.mask();
+        String maskStr = StringUtils.hasLength(sensitiveMask.mask()) ? sensitiveMask.mask() :"??";
+        
         int maskLength = sensitiveMask.maskKeep();
         String locStr = sensitiveMask.locationBefore();
 
@@ -56,7 +57,7 @@ public class SensitiveSerializer extends StdSerializer<String> implements Contex
             end = index > 0 ? index : s.length() - 1;
         }
 
-        String ns = new StringBuilder(s).replace(start, end, STR_MASK).toString();
+        String ns = new StringBuilder(s).replace(start, end, maskStr).toString();
         jsonGenerator.writeString(ns);
     }
 
