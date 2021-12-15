@@ -1,7 +1,5 @@
-package com.ikki.immigrant.application;
+package com.ikki.immigrant.application.authentication;
 
-import com.ikki.immigrant.application.authentication.CdVO;
-import com.ikki.immigrant.application.authentication.CoolDownHandler;
 import com.ikki.immigrant.infrastructure.exception.BizException;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.*;

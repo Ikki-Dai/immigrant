@@ -1,6 +1,5 @@
-package com.ikki.immigrant.application;
+package com.ikki.immigrant.application.authentication;
 
-import com.ikki.immigrant.application.authentication.CoolDown;
 import com.ikki.immigrant.infrastructure.exception.BizException;
 import org.springframework.stereotype.Service;
 

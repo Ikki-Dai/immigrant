@@ -60,7 +60,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
         this.redisson = redisson;
         // init container
         sseClientHandler = new ConcurrentHashMap<>();
-        brokerRegistry = redisson.getMap(BROKER_REGISTRY, StringCodec.INSTANCE);
+        brokerRegistry = redisson.getMap(BROKER_REGISTRY);
         clientRedirectAddress = redisson.getMap(SSE_REDIRECT_REGISTRY, StringCodec.INSTANCE);
         /**
          * registry current server instance as a broker
@@ -69,7 +69,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
         channel = "SSE-" + BROKER_ID;
     }
 
-    private String checkAndRegistryBroker() {
+    String checkAndRegistryBroker() {
         String brokerId = null;
         for (int i = 0; i < 3; i++) {
             brokerId = RandomString.make(10);
@@ -111,7 +111,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
         brokerRegistry.putIfExists(BROKER_ID, BrokerStats.SERVING);
     }
 
-    private void send(SseEmitter sseEmitter, SseValueObject sseValueObject) {
+    void send(SseEmitter sseEmitter, SseValueObject sseValueObject) {
         try {
             sseEmitter.send(SseEmitter.event()
                     .name(sseValueObject.getName().toString())
@@ -151,16 +151,15 @@ public class ScanLoginServiceImpl implements ScanLoginService {
             return false;
         }
         // try to publish
-        RReliableTopic topic = redisson.getReliableTopic("SSE-" + brokerId);
+        RReliableTopic topic = redisson.getReliableTopic(channel);
         topic.publish(sseValueObject);
         return true;
     }
 
 
-    private SseEmitter openSseEmitter(String clientId) {
+    SseEmitter openSseEmitter(String clientId) {
         SseEmitter sseEmitter = new SseEmitter(sseTimeout);
 
-        //
         sseEmitter.onCompletion(() -> {
             sseClientHandler.remove(clientId);
             log.info("ServerSentEvent: {} completed", clientId);
@@ -206,10 +205,11 @@ public class ScanLoginServiceImpl implements ScanLoginService {
         while (sseClientHandler.size() > 0) {
             Thread.sleep(1000L);
         }
+        brokerRegistry.remove(BROKER_ID);
     }
 
 
-    private enum BrokerStats {
+    enum BrokerStats {
         REGISTER, SERVING, TERMINATING,
     }
 
