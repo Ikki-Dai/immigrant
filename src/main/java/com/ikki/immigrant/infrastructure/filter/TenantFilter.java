@@ -41,8 +41,10 @@ public class TenantFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 CurrentUtil.removeClaimsSet();
             } else {
-                throw BizException.of(HttpStatus.UNAUTHORIZED, "invalid auth token");
+                throw BizException.of(HttpStatus.UNAUTHORIZED, "UnSupport auth token type");
             }
+        } else {
+            filterChain.doFilter(request, response);
         }
     }
 }
