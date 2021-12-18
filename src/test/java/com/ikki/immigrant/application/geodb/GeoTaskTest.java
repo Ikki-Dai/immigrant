@@ -39,9 +39,7 @@ class GeoTaskTest {
 
     @Test
     void init() {
-        if (GeoDBUpdateTask.ready) {
-            Assertions.assertTrue(geoDBUpdateTask.dbFileExist());
-        }
+        Assertions.assertTrue(geoDBUpdateTask.dbFileExist());
     }
 
 

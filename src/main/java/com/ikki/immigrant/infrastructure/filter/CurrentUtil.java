@@ -1,6 +1,7 @@
 package com.ikki.immigrant.infrastructure.filter;
 
 import com.ikki.immigrant.domain.Tenant;
+import com.nimbusds.jwt.JWTClaimsSet;
 import ua_parser.Client;
 
 /**
@@ -11,6 +12,10 @@ public class CurrentUtil {
     private static final InheritableThreadLocal<Client> currentUserAgent = new InheritableThreadLocal<>();
     private static final InheritableThreadLocal<Tenant> currentTenant = new InheritableThreadLocal<>();
 
+    private static final InheritableThreadLocal<JWTClaimsSet> currentJwt = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<String> currentIpAddress = new InheritableThreadLocal<>();
+
+
     private CurrentUtil() {
     }
 
@@ -19,7 +24,7 @@ public class CurrentUtil {
      *
      * @param client userAgent
      */
-    static void addUserAgent(Client client) {
+    protected static void addUserAgent(Client client) {
         currentUserAgent.set(client);
     }
 
@@ -27,7 +32,7 @@ public class CurrentUtil {
         return currentUserAgent.get();
     }
 
-    static void removeUserAgent() {
+    protected static void removeUserAgent() {
         currentUserAgent.remove();
     }
 
@@ -44,7 +49,37 @@ public class CurrentUtil {
         return currentTenant.get();
     }
 
-    static void removeTenant() {
+    protected static void removeTenant() {
         currentTenant.remove();
+    }
+
+    /**
+     * @param claimsSet
+     */
+    protected static void addJwtClaimsSet(JWTClaimsSet claimsSet) {
+        currentJwt.set(claimsSet);
+    }
+
+    static JWTClaimsSet getClaimsSet() {
+        return currentJwt.get();
+    }
+
+    protected static void removeClaimsSet() {
+        currentJwt.remove();
+    }
+
+    /**
+     * @param ipAddress
+     */
+    protected static void addIpAddress(String ipAddress) {
+        currentIpAddress.set(ipAddress);
+    }
+
+    static String getIpAddress() {
+        return currentIpAddress.get();
+    }
+
+    protected static void removeIpAddress() {
+        currentIpAddress.remove();
     }
 }

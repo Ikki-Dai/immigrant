@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -22,15 +24,14 @@ import java.io.*;
 @Slf4j
 public class GeoDBUpdateTask {
 
-    public static volatile boolean ready;
     private final File dbFile;
     private final File dbPath;
     private final RestTemplate restTemplate;
     private final String licenseKey;
     private final String checksumUrl;
     private final String downloadUrl;
-
     GeoDBService geoDBService;
+    private volatile boolean ready;
 
     public GeoDBUpdateTask(
             RestTemplate restTemplate,
@@ -50,6 +51,10 @@ public class GeoDBUpdateTask {
         this.downloadUrl = downloadUrl;
         this.licenseKey = licenseKey;
         this.checksumUrl = checksumUrl;
+    }
+
+    public boolean isReady() {
+        return ready;
     }
 
     @PostConstruct
@@ -75,6 +80,9 @@ public class GeoDBUpdateTask {
 
     public File download() {
         Resource resource = restTemplate.getForObject(downloadUrl, Resource.class, licenseKey);
+        if (null == resource) {
+            throw new RestClientException(String.format("download maxmind db from %s failed", downloadUrl));
+        }
         String name = resource.getFilename();
         File file = new File(dbPath.getPath() + File.separator + name);
         try (InputStream inputStream = resource.getInputStream();
@@ -92,8 +100,12 @@ public class GeoDBUpdateTask {
         return file;
     }
 
+
     private boolean checksum(File file) {
         String checksum = restTemplate.getForObject(checksumUrl, String.class, licenseKey);
+        if (!StringUtils.hasLength(checksum)) {
+            throw new RestClientException(String.format("download chesksum  from %s failed", checksumUrl));
+        }
         checksum = checksum.split(" ")[0];
         try (InputStream inputStream = new FileInputStream(file)) {
             String myChecksum = DigestUtils.sha256Hex(inputStream);
