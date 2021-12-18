@@ -28,7 +28,7 @@ public class TenantFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String auth = request.getHeader(HttpHeaders.AUTHORIZATION).trim();
+        String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasLength(auth)) {
             if (StringUtils.startsWithIgnoreCase(auth, BASIC_AUTH)) {
                 // todo analysis basic auth

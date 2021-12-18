@@ -69,7 +69,9 @@ public class GeoDBUpdateTask {
     private void downloadAndCheck() {
         File f = download();
         if (checksum(f)) {
-            dbFile.delete();
+            if (!dbFile.delete()) {
+                log.warn("remove old db file  [{}]failed", dbFile.getAbsolutePath());
+            }
             ready = decompress(f) && f.delete();
         }
     }

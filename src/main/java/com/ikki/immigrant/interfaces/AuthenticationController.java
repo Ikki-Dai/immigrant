@@ -35,7 +35,6 @@ public class AuthenticationController {
 
 
     @GetMapping("/qr/{clientId}")
-    @CrossOrigin(originPatterns = "*.jsbin.com")
     public ResponseEntity<SseEmitter> getQRCode(@PathVariable("clientId") String clientId,
                                                 @RequestHeader(value = "Last-Event-ID", defaultValue = "-1") Long lastEventId) {
         SseEmitter sseEmitter;
